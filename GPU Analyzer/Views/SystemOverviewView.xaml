@@ -1,0 +1,10 @@
+﻿<UserControl x:Class="GPU_Analyzer.Views.SystemOverviewView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid>
+        <TextBox Text="System Overview Content Goes Here" 
+                 HorizontalAlignment="Center" 
+                 VerticalAlignment="Center" 
+                 FontSize="24"/>
+    </Grid>
+</UserControl>

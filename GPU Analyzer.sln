@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GPU Analyzer", "GPU Analyzer\GPU Analyzer.csproj", "{B8E6EFF2-FF93-43C3-BDEE-D3455AF3DC71}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
+	ProjectSection(SolutionItems) = preProject
+		GPUInfo.cs = GPUInfo.cs
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8E6EFF2-FF93-43C3-BDEE-D3455AF3DC71}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8E6EFF2-FF93-43C3-BDEE-D3455AF3DC71}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8E6EFF2-FF93-43C3-BDEE-D3455AF3DC71}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8E6EFF2-FF93-43C3-BDEE-D3455AF3DC71}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {814676DA-2EC2-49B9-B680-C2951CC5BF80}
+	EndGlobalSection
+EndGlobal
