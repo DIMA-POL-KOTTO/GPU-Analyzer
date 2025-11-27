@@ -51,14 +51,57 @@ namespace GPU_Analyzer.ViewModels
         public string GpuLoadText => $"{GpuLoad:F0}%";
         public ObservableCollection<float> GpuLoadHistory { get; set; }
         public GPUInfo SelectedGPU => mainVM.SelectedGPU;
-        
-        
-        
+
+
+        private float memoryMaxValue;
+        public float MemoryMaxValue
+        {
+            get => memoryMaxValue;
+            set
+            {
+                memoryMaxValue = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MemoryMaxValueText));
+            }
+        }
+        public string MemoryMaxValueText => $"{MemoryMaxValue:F0}";
+
+        private float memoryMidValue;
+        public float MemoryMidValue
+        {
+            get => memoryMidValue;
+            set
+            {
+                memoryMidValue = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MemoryMidValueText));
+            }
+        }
+        public string MemoryMidValueText => $"{MemoryMidValue:F0}";
+
+        private float memoryMinValue;
+        public float MemoryMinValue
+        {
+            get => memoryMinValue;
+            set
+            {
+                memoryMinValue = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(MemoryMinValueText));
+            }
+        }
+        public string MemoryMinValueText => $"{MemoryMinValue:F0}";
+
         public MonitoringViewModel(IGPUInfoService gpuService)
         {
             
             this.gpuService = gpuService;
             MemoryHistory = new ObservableCollection<float>();
+            MemoryMaxValue = 0f;
+            MemoryMidValue = 0f;
+            MemoryMinValue = 0f;
+
+
             GpuLoadHistory = new ObservableCollection<float>();
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += (s, e) => UpdateMonitoring();
@@ -89,6 +132,7 @@ namespace GPU_Analyzer.ViewModels
             {
                 MemoryUsed = used;
                 MemoryHistory.Add(used);
+                UpdateMemoryGraphValues();
                 OnPropertyChanged(nameof(MemoryHistory));
                 if (MemoryHistory.Count > 100)
                 {
@@ -104,6 +148,23 @@ namespace GPU_Analyzer.ViewModels
                 }
             });
         }
+
+        private void UpdateMemoryGraphValues()
+        {
+            if (MemoryHistory.Count > 0)
+            {
+                MemoryMaxValue = MemoryHistory.Max();
+                MemoryMidValue = MemoryHistory.Average();
+                MemoryMinValue = MemoryHistory.Min();
+            }
+            else
+            {
+                MemoryMaxValue = 0f;
+                MemoryMidValue = 0f;
+                MemoryMinValue = 0f;
+            }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string prop = "")

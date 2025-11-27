@@ -8,30 +8,53 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="180" />
-            <ColumnDefinition Width="180" />
+            <ColumnDefinition Width="120" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="75" />
-            <RowDefinition Height="75"/>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="100"/>
         </Grid.RowDefinitions>
         <TextBlock Text="Использование ОП GPU:" Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
         <TextBlock Text="{Binding MemoryUsedText}" Grid.Row="0" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
-        <Canvas Background="LightGray" Margin="0,10,0,0" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Left" Width="200">
-            <Polyline Stroke="Lime" StrokeThickness="2">
-                <Polyline.Points>
-                    <MultiBinding Converter="{StaticResource GraphConverter}">
-                        <Binding Path="MemoryHistory"/>
-                        <Binding RelativeSource="{RelativeSource Self}" Path="Parent.ActualWidth"/>
-                        <Binding RelativeSource="{RelativeSource Self}" Path="Parent.ActualHeight"/>
-                    </MultiBinding>
-                </Polyline.Points>
-            </Polyline>
-        </Canvas>
+        <Border Grid.Row="0" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+            <Grid>
+                <Canvas x:Name="MemoryCanvas" Height="90" VerticalAlignment="Center">
+
+                    <!-- Сетка и оси -->
+                    <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="200" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                    <!-- Горизонтальные линии сетки -->
+                    <Line X1="0" Y1="22.5" X2="200" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="200" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="200" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                    <!-- Подписи оси Y -->
+                    <TextBlock Text="{Binding MemoryMaxValue, StringFormat='{}{0:f0}'}" 
+                               Canvas.Left="-30" Canvas.Top="2"/>
+                    <TextBlock Text="{Binding MemoryMidValue, StringFormat='{}{0:f0}'}" 
+                               Canvas.Left="-30" Canvas.Top="40"/>
+                    <TextBlock Text="{Binding MemoryMinValue, StringFormat='{}{0:f0}'}" 
+                               Canvas.Left="-30" Canvas.Top="78"/>
+
+                    <!-- График -->
+                    <Polyline Stroke="Red">
+                        <Polyline.Points>
+                            <MultiBinding Converter="{StaticResource GraphConverter}">
+                                <Binding Path="MemoryHistory"/>
+                                <Binding ElementName="MemoryCanvas" Path="ActualWidth"/>
+                                <Binding ElementName="MemoryCanvas" Path="ActualHeight"/>
+                            </MultiBinding>
+                        </Polyline.Points>
+                    </Polyline>
+                </Canvas>
+            </Grid>
+        </Border>
 
         <TextBlock Text="Загрузка GPU:" Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
         <TextBlock Text="{Binding GpuLoadText}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
-        <Canvas Background="LightGray" Margin="0,10,0,0" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Width="200">
+        <Canvas Background="LightGray" Margin="10,5,15,5" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Width="200">
             <Polyline Stroke="Lime" StrokeThickness="2">
                 <Polyline.Points>
                     <MultiBinding Converter="{StaticResource GraphConverter}">

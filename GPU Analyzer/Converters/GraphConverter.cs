@@ -21,11 +21,11 @@ namespace GPU_Analyzer.Converters
                 return new PointCollection();
             }
 
-            double width = 150;
-            double height = 75;
+            double width = (double)values[1]; // ActualWidth из Canvas
+            double height = (double)values[2]; // ActualHeight из Canvas
 
-            float max = history.Max() * 1.2f;
-            float min = history.Min() * 0.8f;
+            float max = history.Max();
+            float min = history.Min();
 
             if (max - min < 1)
             {
