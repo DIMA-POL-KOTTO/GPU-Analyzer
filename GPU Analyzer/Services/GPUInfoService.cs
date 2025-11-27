@@ -71,7 +71,7 @@ namespace GPU_Analyzer.Services
 
                     foreach (var sensor in hardware.Sensors)
                     {
-                        if (sensor.Name == "D3D Shared Memory Used")
+                        if (sensor.Name.Contains("Memory Used"))
                         {
                             memoryUsed = sensor.Value ?? 0;
                             
