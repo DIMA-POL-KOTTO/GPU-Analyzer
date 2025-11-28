@@ -12,10 +12,18 @@
                     <Border Padding="8" BorderBrush="#DDD" BorderThickness="1" CornerRadius="4">
                         <Grid>
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="180" />
+                                <ColumnDefinition Width="220" />
                                 <ColumnDefinition Width="*" />
                             </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -27,8 +35,35 @@
                             <TextBlock Text="Выделенная память:" Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
                             <TextBlock Text="{Binding DedicatedMemory}" Grid.Row="1" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
 
-                            <TextBlock Text="Версия драйвера:" Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,0" VerticalAlignment="Center" />
-                            <TextBlock Text="{Binding DriverVersion}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,0" VerticalAlignment="Center" />
+                            <TextBlock Text="Версия драйвера:" Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding DriverVersion}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Название GPU:" Grid.Row="3" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding VideoProcessor }" Grid.Row="3" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Производитель:" Grid.Row="4" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding AdapterCompatibility }" Grid.Row="4" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Полный путь устройства:" Grid.Row="5" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding PNPDeviceID }" Grid.Row="5" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Логический ID устройства:" Grid.Row="6" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding DeviceID }" Grid.Row="6" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Текущий видеорежим:" Grid.Row="7" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding VideoModeDescription}" Grid.Row="7" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Текущее разрешение:" Grid.Row="8" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding CurrentResolution }" Grid.Row="8" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Частота обновления монитора (Гц):" Grid.Row="9" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding RefreshRate }" Grid.Row="9" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            <TextBlock Text="Тип видеопамяти:" Grid.Row="10" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding VideoMemoryType }" Grid.Row="10" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" />
+
+                            
+                          
                         </Grid>
                     </Border>
                 </DataTemplate>

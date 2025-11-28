@@ -14,7 +14,14 @@ namespace GPU_Analyzer.Models
         private string name = "";
         private string dedicatedMemory = "";
         private string driverVersion = "";
-        private float memoryUsed = 0;
+        private string videoProcessor = "";
+        private string adapterCompatibility = "";
+        private string pnpDeviceId = "";
+        private string deviceId = "";
+        private string videoModeDescription = "";
+        private string currentResolution = "";
+        private string refreshRate = "";
+        private string videoMemoryType = "";
 
         public string Name
         {
@@ -31,6 +38,47 @@ namespace GPU_Analyzer.Models
             get { return driverVersion; }
             set { driverVersion = value; OnPropertyChanged("DriverVersion"); }
         }
+        public string VideoProcessor
+        {
+            get { return videoProcessor; }
+            set { videoProcessor = value; OnPropertyChanged("VideoProcessor"); }
+        }
+        public string AdapterCompatibility
+        {
+            get { return adapterCompatibility; }
+            set { adapterCompatibility = value; OnPropertyChanged("AdapterCompatibility"); }
+        }
+        public string PNPDeviceID
+        {
+            get { return pnpDeviceId; }
+            set { pnpDeviceId = value; OnPropertyChanged("PNPDeviceId"); }
+        }
+        public string DeviceID
+        {
+            get { return deviceId; }
+            set { deviceId = value; OnPropertyChanged("DeviceId"); }
+        }
+        public string VideoModeDescription
+        {
+            get { return videoModeDescription; }
+            set { videoModeDescription = value; OnPropertyChanged("VideoModeDescription"); }
+        }
+        public string CurrentResolution
+        {
+            get { return currentResolution; }
+            set { currentResolution = value; OnPropertyChanged("CurrentResolution"); }
+        }
+        public string RefreshRate
+        {
+            get { return refreshRate; }
+            set { refreshRate = value; OnPropertyChanged("RefreshRate"); }
+        }
+        public string VideoMemoryType
+        {
+            get { return videoMemoryType; }
+            set { videoMemoryType = value; OnPropertyChanged("VideoMemoryType"); }
+        }
+
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

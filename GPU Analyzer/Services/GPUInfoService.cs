@@ -38,7 +38,14 @@ namespace GPU_Analyzer.Services
                         Name = obj["Name"]?.ToString() ?? "N/A",
                         DriverVersion = obj["DriverVersion"]?.ToString() ?? "N/A",
                         DedicatedMemory = FormatMemory(obj["AdapterRAM"]),
-
+                        VideoProcessor = obj["VideoProcessor"]?.ToString() ?? "N/A",
+                        AdapterCompatibility = obj["AdapterCompatibility"]?.ToString() ?? "N/A",
+                        PNPDeviceID = obj["PNPDeviceID"]?.ToString() ?? "N/A",
+                        DeviceID = obj["DeviceID"]?.ToString() ?? "N/A",
+                        VideoModeDescription = obj["VideoModeDescription"]?.ToString() ?? "N/A",
+                        CurrentResolution = $"{obj["CurrentHorizontalResolution"]}x{obj["CurrentVerticalResolution"]}",
+                        RefreshRate = obj["CurrentRefreshRate"]?.ToString() ?? "N/A",
+                        VideoMemoryType = obj["VideoMemoryType"]?.ToString() ?? "N/A"
                     };
                     adapters.Add(adapter);
                 }
