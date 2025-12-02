@@ -115,6 +115,28 @@ namespace GPU_Analyzer.Services
             return loadGPU;
         }
 
+        public float GetTemperatureGPU(GPUInfo gpu)
+        {
+            float temperatureGPU = 0;
+            foreach (var hardware in computer.Hardware)
+            {
+                hardware.Update();
+                if (hardware.HardwareType == HardwareType.GpuNvidia || hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.GpuIntel)
+                {
+                    if (hardware.Name != gpu.Name)
+                        continue;
+                    foreach (var sensor in hardware.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Temperature)
+                        {
+                            temperatureGPU = sensor.Value ?? 0;
+                        }
+                    }
+                }
+            }
+            return temperatureGPU;
+        }
+
         //какие вообще сенсоры я могу прочитать с GPU
         public void DebugGPUInfo_Sensors()
         {

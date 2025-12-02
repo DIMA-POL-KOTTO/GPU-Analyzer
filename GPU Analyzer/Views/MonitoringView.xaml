@@ -12,9 +12,12 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="100" />
-            <RowDefinition Height="100"/>
+            <RowDefinition Height="110" />
+            <RowDefinition Height="110"/>
+            <RowDefinition Height="110"/>
+
         </Grid.RowDefinitions>
+        <!-- MemoryUsed -->
         <TextBlock Text="Использование ОП GPU:" Grid.Row="0" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
         <TextBlock Text="{Binding MemoryUsedText}" Grid.Row="0" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
         <Border Grid.Row="0" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
@@ -23,20 +26,20 @@
 
                     <!-- Сетка и оси -->
                     <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
-                    <Line X1="0" Y1="90" X2="200" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
 
                     <!-- Горизонтальные линии сетки -->
-                    <Line X1="0" Y1="22.5" X2="200" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
-                    <Line X1="0" Y1="45" X2="200" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
-                    <Line X1="0" Y1="67.5" X2="200" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
 
                     <!-- Подписи оси Y -->
                     <TextBlock Text="{Binding MemoryMaxValue, StringFormat='{}{0:f0}'}" 
-                               Canvas.Left="-30" Canvas.Top="2"/>
+                               Canvas.Left="-30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     <TextBlock Text="{Binding MemoryMidValue, StringFormat='{}{0:f0}'}" 
-                               Canvas.Left="-30" Canvas.Top="40"/>
+                               Canvas.Left="-30" Canvas.Top="37" HorizontalAlignment="Center" VerticalAlignment="Top"/>
                     <TextBlock Text="{Binding MemoryMinValue, StringFormat='{}{0:f0}'}" 
-                               Canvas.Left="-30" Canvas.Top="78"/>
+                               Canvas.Left="-30" Canvas.Top="78" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
                     <!-- График -->
                     <Polyline Stroke="Red">
@@ -52,19 +55,83 @@
             </Grid>
         </Border>
 
-        <TextBlock Text="Загрузка GPU:" Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
-        <TextBlock Text="{Binding GpuLoadText}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
-        <Canvas Background="LightGray" Margin="10,5,15,5" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Left" Width="200">
-            <Polyline Stroke="Lime" StrokeThickness="2">
-                <Polyline.Points>
-                    <MultiBinding Converter="{StaticResource GraphConverter}">
-                        <Binding Path="GpuLoadHistory"/>
-                        <Binding RelativeSource="{RelativeSource Self}" Path="Parent.ActualWidth"/>
-                        <Binding RelativeSource="{RelativeSource Self}" Path="Parent.ActualHeight"/>
-                    </MultiBinding>
-                </Polyline.Points>
-            </Polyline>
-        </Canvas>
+        <!-- GpuLoad -->
+        <TextBlock Text="Загрузка GPU:" Grid.Row="1" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding GpuLoadText}" Grid.Row="1" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
+
+        <Border Grid.Row="1" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+            <Grid>
+                <Canvas x:Name="GpuLoadCanvas" Height="90" VerticalAlignment="Center">
+
+                    <!-- Сетка и оси -->
+                    <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                    <!-- Горизонтальные линии сетки -->
+                    <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                    <!-- Подписи оси Y -->
+                    <TextBlock Text="100%" 
+                       Canvas.Left="-33" RenderTransformOrigin="0.262,2.346" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBlock Text="50%" 
+                       Canvas.Left="-30" Canvas.Top="37" RenderTransformOrigin="0.493,-0.369" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="0%" 
+                       Canvas.Left="-27" Canvas.Top="78" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+
+                    <!-- График -->
+                    <Polyline Stroke="Lime">
+                        <Polyline.Points>
+                            <MultiBinding Converter="{StaticResource GraphConverter}">
+                                <Binding Path="GpuLoadHistory"/>
+                                <Binding ElementName="GpuLoadCanvas" Path="ActualWidth"/>
+                                <Binding ElementName="GpuLoadCanvas" Path="ActualHeight"/>
+                            </MultiBinding>
+                        </Polyline.Points>
+                    </Polyline>
+                </Canvas>
+            </Grid>
+        </Border>
+
+        <!-- GpuTemp -->
+        <TextBlock Text="Температура GPU:" Grid.Row="2" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding GpuTempText}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
+
+        <Border Grid.Row="2" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+            <Grid>
+                <Canvas x:Name="GpuTempCanvas" Height="90" VerticalAlignment="Center">
+
+                    <!-- Сетка и оси -->
+                    <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                    <!-- Горизонтальные линии сетки -->
+                    <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=MemoryCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                    <!-- Подписи оси Y -->
+                    <TextBlock Text="100°C" 
+               Canvas.Left="-36" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                    <TextBlock Text="50°C" 
+               Canvas.Left="-33" Canvas.Top="37" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="0°C" 
+               Canvas.Left="-30" Canvas.Top="75" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <!-- График -->
+                    <Polyline Stroke="Red">
+                        <Polyline.Points>
+                            <MultiBinding Converter="{StaticResource GraphConverter}">
+                                <Binding Path="GpuTempHistory"/>
+                                <Binding ElementName="GpuTempCanvas" Path="ActualWidth"/>
+                                <Binding ElementName="GpuTempCanvas" Path="ActualHeight"/>
+                            </MultiBinding>
+                        </Polyline.Points>
+                    </Polyline>
+                </Canvas>
+            </Grid>
+        </Border>
 
     </Grid>
 </UserControl>

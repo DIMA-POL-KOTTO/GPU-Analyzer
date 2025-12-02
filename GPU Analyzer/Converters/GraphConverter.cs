@@ -32,6 +32,11 @@ namespace GPU_Analyzer.Converters
                 max = min + 1;
             }
             var points = new PointCollection();
+            if (history.Count == 1)
+            {
+                points.Add(new Point(0, height - height / 2));
+                return points;
+            }
             double step = width/(history.Count-1);
             for (int i = 0; i < history.Count; i++)
             {

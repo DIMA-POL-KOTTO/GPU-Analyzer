@@ -22,7 +22,7 @@ namespace GPU_Analyzer.ViewModels
         
         private System.Timers.Timer timer;
         
-
+        // MEMORY_USED
         private float memoryUsed;
         public float MemoryUsed
         {
@@ -37,6 +37,7 @@ namespace GPU_Analyzer.ViewModels
         public string MemoryUsedText => $"{MemoryUsed:F0} МБ";
         public ObservableCollection<float> MemoryHistory { get; set; }
 
+        // GPU_LOAD
         private float gpuLoad;
         public float GpuLoad
         {
@@ -50,9 +51,23 @@ namespace GPU_Analyzer.ViewModels
 
         public string GpuLoadText => $"{GpuLoad:F0}%";
         public ObservableCollection<float> GpuLoadHistory { get; set; }
+
+        // TEMPERATURE
+        private float gpuTemp;
+        public float GpuTemp
+        {
+            get => gpuTemp;
+            set
+            {
+                gpuTemp = value;
+                OnPropertyChanged(nameof(GpuTempText));
+            }
+        }
+        public string GpuTempText => $"{GpuTemp:F0} °C";
+        public ObservableCollection<float> GpuTempHistory { get; set; }
+
+        // other
         public GPUInfo SelectedGPU => mainVM.SelectedGPU;
-
-
         private float memoryMaxValue;
         public float MemoryMaxValue
         {
@@ -101,8 +116,10 @@ namespace GPU_Analyzer.ViewModels
             MemoryMidValue = 0f;
             MemoryMinValue = 0f;
 
-
             GpuLoadHistory = new ObservableCollection<float>();
+
+            GpuTempHistory = new ObservableCollection<float>();
+
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += (s, e) => UpdateMonitoring();
             
@@ -125,28 +142,44 @@ namespace GPU_Analyzer.ViewModels
 
             float used = gpuService.GetMemoryUsed(SelectedGPU);
             float load = gpuService.GetLoadGPU(SelectedGPU);
-            gpuService.DebugGPUInfo_Sensors(); //потом убрать
-            gpuService.DebugGPUInfo_WMI();
+            float temp = gpuService.GetTemperatureGPU(SelectedGPU);
+            //gpuService.DebugGPUInfo_Sensors(); //потом убрать
+            //gpuService.DebugGPUInfo_WMI();
             // Обновляем UI через Dispatcher
-            App.Current.Dispatcher.Invoke(() =>
+            try
             {
-                MemoryUsed = used;
-                MemoryHistory.Add(used);
-                UpdateMemoryGraphValues();
-                OnPropertyChanged(nameof(MemoryHistory));
-                if (MemoryHistory.Count > 100)
+                App.Current.Dispatcher.Invoke(() =>
                 {
-                    MemoryHistory.RemoveAt(0);
-                }
+                    MemoryUsed = used;
+                    MemoryHistory.Add(used);
+                    UpdateMemoryGraphValues();
+                    OnPropertyChanged(nameof(MemoryHistory));
+                    if (MemoryHistory.Count > 100)
+                    {
+                        MemoryHistory.RemoveAt(0);
+                    }
 
-                GpuLoad = load;
-                GpuLoadHistory.Add(load);
-                OnPropertyChanged(nameof(GpuLoadHistory));
-                if (GpuLoadHistory.Count > 100)
-                {
-                    GpuLoadHistory.RemoveAt(0);
-                }
-            });
+                    GpuLoad = load;
+                    GpuLoadHistory.Add(load);
+                    OnPropertyChanged(nameof(GpuLoadHistory));
+                    if (GpuLoadHistory.Count > 100)
+                    {
+                        GpuLoadHistory.RemoveAt(0);
+                    }
+
+                    GpuTemp = temp;
+                    GpuTempHistory.Add(temp);
+                    OnPropertyChanged(nameof(GpuTempHistory));
+                    if (GpuTempHistory.Count > 100)
+                    {
+                        GpuTempHistory.RemoveAt(0);
+                    }
+                });
+            }
+            catch (System.NullReferenceException)
+            {
+                System.Diagnostics.Debug.WriteLine("Всё ок");
+            }
         }
 
         private void UpdateMemoryGraphValues()

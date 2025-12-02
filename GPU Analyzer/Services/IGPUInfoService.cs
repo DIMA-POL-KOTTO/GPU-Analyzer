@@ -12,6 +12,7 @@ namespace GPU_Analyzer.Services
         List<GPUInfo> EnumerateAdapters();
         float GetMemoryUsed(GPUInfo gpu);
         float GetLoadGPU(GPUInfo gpu);
+        float GetTemperatureGPU(GPUInfo gpu);
         void DebugGPUInfo_Sensors();
         void DebugGPUInfo_WMI();
     }
