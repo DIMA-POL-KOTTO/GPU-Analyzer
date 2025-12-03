@@ -46,15 +46,17 @@ namespace GPU_Analyzer.ViewModels
             SelectedGPU = GPUs.FirstOrDefault();
             gpuInfoVM.Bind(this);
             monitoringVM.Bind(this);
+            
             //systemOverviewVM.BindSelectedGPU(this);
             Tabs = new List<TabItemModel>
             {
                 new TabItemModel { Title = systemOverviewVM.Title, View = new SystemOverviewView { DataContext = systemOverviewVM } },
                 new TabItemModel { Title = gpuInfoVM.Title, View = new GPUInfoView { DataContext = gpuInfoVM } },
                 new TabItemModel { Title = monitoringVM.Title, View = new MonitoringView { DataContext = monitoringVM } },
+                new TabItemModel { Title = stressTestsVM.Title, View = new StressTestsView { DataContext = stressTestsVM } },
                 /*
                
-                new TabItemModel { Title = stressTestsVM.Title, View = new StressTestsView { DataContext = stressTestsVM } },
+                
                 new TabItemModel { Title = settingsVM.Title, View = new SettingsView { DataContext = settingsVM } },*/
 
             };

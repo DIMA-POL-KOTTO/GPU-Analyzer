@@ -10,23 +10,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GPU_Analyzer.Views
+namespace GPU_Analyzer.StressTests
 {
     /// <summary>
-    /// Логика взаимодействия для StressTestsView.xaml
+    /// Логика взаимодействия для DxHostPanel.xaml
     /// </summary>
-    public partial class StressTestsView
+    public partial class DxHostPanel : UserControl
     {
-        public StressTestsView()
+        public DxHostPanel()
         {
             InitializeComponent();
-        }
-
-        private void StartDxTest_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }

@@ -15,18 +15,14 @@ using System.Windows.Shapes;
 namespace GPU_Analyzer.Views
 {
     /// <summary>
-    /// Логика взаимодействия для StressTestsView.xaml
+    /// Логика взаимодействия для StressTestWindow.xaml
     /// </summary>
-    public partial class StressTestsView
+    public partial class StressTestWindow : Window
     {
-        public StressTestsView()
+        
+        public StressTestWindow()
         {
             InitializeComponent();
-        }
-
-        private void StartDxTest_Click(object sender, RoutedEventArgs e)
-        {
-
         }
     }
 }
