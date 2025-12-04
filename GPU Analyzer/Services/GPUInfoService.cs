@@ -48,6 +48,7 @@ namespace GPU_Analyzer.Services
                         VideoMemoryType = obj["VideoMemoryType"]?.ToString() ?? "N/A"
                     };
                     adapters.Add(adapter);
+                    adapters.Add(new GPUInfo { Name = "Checking" });//delete
                 }
             }
             catch (Exception ex)
@@ -92,6 +93,11 @@ namespace GPU_Analyzer.Services
 
         public float GetLoadGPU(GPUInfo gpu)
         {
+            if (gpu.Name.Contains("Intel"))
+            {
+                //Используем отдельный провайдер для Intel
+                return IntelGpuLoadWin10.GetLoad();
+            }
             float loadGPU = 0;
             foreach (var hardware in computer.Hardware)
             {

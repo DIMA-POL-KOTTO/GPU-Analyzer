@@ -17,6 +17,7 @@ namespace GPU_Analyzer.ViewModels
 
         private MainViewModel mainVM;
         private readonly IGPUInfoService gpuService;
+        private GPUInfo lastGPU = null;
 
         public string Title => "Мониторинг";
         
@@ -140,6 +141,27 @@ namespace GPU_Analyzer.ViewModels
             if (SelectedGPU == null)
                 return;
 
+            // GPU сменился → очистить данные
+            if (lastGPU != SelectedGPU)
+            {
+                App.Current.Dispatcher.Invoke(() =>
+                {
+                    MemoryHistory.Clear();
+                    GpuLoadHistory.Clear();
+                    GpuTempHistory.Clear();
+
+                    MemoryMaxValue = 0;
+                    MemoryMidValue = 0;
+                    MemoryMinValue = 0;
+
+                    OnPropertyChanged(nameof(MemoryHistory));
+                    OnPropertyChanged(nameof(GpuLoadHistory));
+                    OnPropertyChanged(nameof(GpuTempHistory));
+                });
+
+                lastGPU = SelectedGPU;
+            }
+
             float used = gpuService.GetMemoryUsed(SelectedGPU);
             float load = gpuService.GetLoadGPU(SelectedGPU);
             float temp = gpuService.GetTemperatureGPU(SelectedGPU);
@@ -150,12 +172,7 @@ namespace GPU_Analyzer.ViewModels
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
-                    if (mainVM.SelectedGPU != SelectedGPU)
-                    {
-                        MemoryHistory.Clear();
-                        GpuLoadHistory.Clear();
-                        GpuTempHistory.Clear();
-                    }
+                    
                     MemoryUsed = used;
                     MemoryHistory.Add(used);
                     UpdateMemoryGraphValues();
