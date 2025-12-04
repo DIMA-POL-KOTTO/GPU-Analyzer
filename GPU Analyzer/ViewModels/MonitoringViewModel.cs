@@ -150,6 +150,12 @@ namespace GPU_Analyzer.ViewModels
             {
                 App.Current.Dispatcher.Invoke(() =>
                 {
+                    if (mainVM.SelectedGPU != SelectedGPU)
+                    {
+                        MemoryHistory.Clear();
+                        GpuLoadHistory.Clear();
+                        GpuTempHistory.Clear();
+                    }
                     MemoryUsed = used;
                     MemoryHistory.Add(used);
                     UpdateMemoryGraphValues();
