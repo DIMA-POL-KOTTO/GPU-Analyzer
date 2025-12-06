@@ -67,6 +67,33 @@ namespace GPU_Analyzer.ViewModels
         public string GpuTempText => $"{GpuTemp:F0} °C";
         public ObservableCollection<float> GpuTempHistory { get; set; }
 
+        //CORE_CLOCK
+        private float coreClock;
+        public float CoreClock
+        {
+            get => coreClock;
+            set
+            {
+                coreClock = value;
+                OnPropertyChanged(nameof(CoreClockText));
+            }
+        }
+        public string CoreClockText => $"{CoreClock:F0} МГц";
+        public ObservableCollection<float> CoreClockHistory {  get; set; }
+
+        //MEMORY_CLOCK
+        private float memoryClock;
+        public float MemoryClock
+        {
+            get => memoryClock;
+            set
+            {
+                memoryClock= value;
+                OnPropertyChanged(nameof(MemoryClockText)); 
+            }
+        }
+        public string MemoryClockText => $"{MemoryClock:F0} МГц";
+        public ObservableCollection<float> MemoryClockHistory { get; set; }
         // other
         public GPUInfo SelectedGPU => mainVM.SelectedGPU;
         private float memoryMaxValue;
@@ -121,6 +148,10 @@ namespace GPU_Analyzer.ViewModels
 
             GpuTempHistory = new ObservableCollection<float>();
 
+            CoreClockHistory = new ObservableCollection<float>();
+
+            MemoryClockHistory = new ObservableCollection<float>();
+
             timer = new System.Timers.Timer(1000);
             timer.Elapsed += (s, e) => UpdateMonitoring();
             
@@ -149,6 +180,8 @@ namespace GPU_Analyzer.ViewModels
                     MemoryHistory.Clear();
                     GpuLoadHistory.Clear();
                     GpuTempHistory.Clear();
+                    CoreClockHistory.Clear();
+                    MemoryClockHistory.Clear();
 
                     MemoryMaxValue = 0;
                     MemoryMidValue = 0;
@@ -157,6 +190,8 @@ namespace GPU_Analyzer.ViewModels
                     OnPropertyChanged(nameof(MemoryHistory));
                     OnPropertyChanged(nameof(GpuLoadHistory));
                     OnPropertyChanged(nameof(GpuTempHistory));
+                    OnPropertyChanged(nameof(CoreClockHistory));
+                    OnPropertyChanged(nameof(MemoryClockHistory));
                 });
 
                 lastGPU = SelectedGPU;
@@ -165,6 +200,8 @@ namespace GPU_Analyzer.ViewModels
             float used = gpuService.GetMemoryUsed(SelectedGPU);
             float load = gpuService.GetLoadGPU(SelectedGPU);
             float temp = gpuService.GetTemperatureGPU(SelectedGPU);
+            float core_clock = gpuService.GetCoreClock(SelectedGPU);
+            float mem_clock = gpuService.GetMemoryClock(SelectedGPU);
             //gpuService.DebugGPUInfo_Sensors(); //потом убрать
             //gpuService.DebugGPUInfo_WMI();
             // Обновляем UI через Dispatcher
@@ -196,6 +233,22 @@ namespace GPU_Analyzer.ViewModels
                     if (GpuTempHistory.Count > 100)
                     {
                         GpuTempHistory.RemoveAt(0);
+                    }
+
+                    CoreClock = core_clock;
+                    CoreClockHistory.Add(core_clock);
+                    OnPropertyChanged(nameof (CoreClockHistory));
+                    if (CoreClockHistory.Count > 100)
+                    {
+                        CoreClockHistory.RemoveAt(0);
+                    }
+
+                    MemoryClock = mem_clock;
+                    MemoryClockHistory.Add(mem_clock);
+                    OnPropertyChanged(nameof(MemoryClockHistory));
+                    if (MemoryClockHistory.Count > 100)
+                    {
+                        MemoryClockHistory.RemoveAt(0);
                     }
                 });
             }

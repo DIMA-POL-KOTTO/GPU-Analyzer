@@ -22,6 +22,7 @@ namespace GPU_Analyzer.Models
         private string currentResolution = "";
         private string refreshRate = "";
         private string videoMemoryType = "";
+        private string vendor = "";
 
         public string Name
         {
@@ -79,6 +80,11 @@ namespace GPU_Analyzer.Models
             set { videoMemoryType = value; OnPropertyChanged("VideoMemoryType"); }
         }
 
+        public string Vendor
+        {
+            get { return vendor; }
+            set { vendor = value; OnPropertyChanged("Vendor"); }
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
         public void OnPropertyChanged([CallerMemberName] string prop = "")

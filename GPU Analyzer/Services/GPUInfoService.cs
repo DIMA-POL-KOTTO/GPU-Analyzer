@@ -45,7 +45,8 @@ namespace GPU_Analyzer.Services
                         VideoModeDescription = obj["VideoModeDescription"]?.ToString() ?? "N/A",
                         CurrentResolution = $"{obj["CurrentHorizontalResolution"]}x{obj["CurrentVerticalResolution"]}",
                         RefreshRate = obj["CurrentRefreshRate"]?.ToString() ?? "N/A",
-                        VideoMemoryType = obj["VideoMemoryType"]?.ToString() ?? "N/A"
+                        VideoMemoryType = obj["VideoMemoryType"]?.ToString() ?? "N/A",
+                        Vendor = GetVendorFromPNP(obj["PNPDeviceID"]?.ToString())
                     };
                     adapters.Add(adapter);
                     adapters.Add(new GPUInfo { Name = "Checking" });//delete
@@ -56,6 +57,17 @@ namespace GPU_Analyzer.Services
                 Console.WriteLine("Ошибка при получении GPU: ", ex.Message);
             }
             return adapters;
+        }
+
+        private static string GetVendorFromPNP(string pnpId)
+        {
+            if (string.IsNullOrEmpty(pnpId)) return "Unknown";
+
+            // Пример: PCI\VEN_10DE&DEV_2206...
+            if (pnpId.Contains("VEN_10DE")) return "NVIDIA";
+            if (pnpId.Contains("VEN_1002")) return "AMD";
+            if (pnpId.Contains("VEN_8086") || pnpId.Contains("VEN_8087")) return "Intel";
+            return "Unknown";
         }
         //Метод для преобразования байтов в МБ
         private static string FormatMemory(object obj)
@@ -141,6 +153,55 @@ namespace GPU_Analyzer.Services
                 }
             }
             return temperatureGPU;
+        }
+
+        public float GetCoreClock(GPUInfo gpu)
+        {
+            float coreClock = 0;
+            foreach (var hardware in computer.Hardware)
+            {
+                hardware.Update();
+                if (hardware.HardwareType == HardwareType.GpuNvidia || hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.GpuIntel)
+                {
+                    if (hardware.Name != gpu.Name)
+                        continue;
+
+                    foreach (var sensor in hardware.Sensors)
+                    {
+                        
+                        if (sensor.SensorType == SensorType.Clock && sensor.Name.Contains("Core"))
+                        {
+                            coreClock = sensor.Value ?? 0;
+                        }
+                    }
+                }
+            }
+            return coreClock;
+        }
+
+        public float GetMemoryClock(GPUInfo gpu)
+        {
+            float memoryClock = 0;
+            foreach (var hardware in computer.Hardware)
+            {
+                hardware.Update();
+
+                if (hardware.HardwareType == HardwareType.GpuNvidia || hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.GpuIntel)
+                {
+                    if (hardware.Name != gpu.Name)
+                        continue;
+
+                    foreach (var sensor in hardware.Sensors)
+                    {                      
+                        if (sensor.SensorType == SensorType.Clock &&
+                            sensor.Name.Contains("Memory"))
+                        {
+                            memoryClock = sensor.Value ?? 0;
+                        }
+                    }
+                }
+            }
+            return memoryClock;
         }
 
         //какие вообще сенсоры я могу прочитать с GPU

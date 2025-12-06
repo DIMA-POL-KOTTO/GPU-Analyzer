@@ -24,8 +24,10 @@ namespace GPU_Analyzer.Converters
             double width = (double)values[1]; // ActualWidth из Canvas
             double height = (double)values[2]; // ActualHeight из Canvas
 
-            float max = history.Max();
-            float min = history.Min();
+            bool fixed100 = parameter?.ToString() == "Fixed100";
+
+            float max = fixed100 ? 100 : history.Max();
+            float min = fixed100 ? 0 : history.Min();
 
             if (max - min < 1)
             {
