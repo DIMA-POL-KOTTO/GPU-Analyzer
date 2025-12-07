@@ -10,6 +10,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using GPU_Analyzer.Services;
+using GPU_Analyzer.Commands;
+using System.Windows.Input;
 
 namespace GPU_Analyzer.ViewModels
 {
@@ -18,6 +20,7 @@ namespace GPU_Analyzer.ViewModels
 
         
         private IGPUInfoService gpuService;
+        public ICommand OpenReportWindowCommand { get; }
         
         public ObservableCollection<GPUInfo> GPUs { get; }
         private GPUInfo selectedGPU;
@@ -61,6 +64,22 @@ namespace GPU_Analyzer.ViewModels
 
             };
             SelectedTab = Tabs[0];
+            OpenReportWindowCommand = new RelayCommand(_ => OpenReportWindow());
+        }
+
+        private void OpenReportWindow()
+        {
+            
+            var vm = new ReportViewModel
+            {
+                gpu = this.SelectedGPU
+            };
+
+            var window = new ReportWindow();
+            window.DataContext = vm;
+            vm.CloseRequested += () => window.Close();
+
+            window.ShowDialog();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
