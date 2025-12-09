@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace GPU_Analyzer.Commands
+namespace GPU_Analyzer.ViewModels.Commands
 {
     public class RelayCommand : ICommand
     {
@@ -21,7 +21,7 @@ namespace GPU_Analyzer.Commands
         {
             return canExecute == null || canExecute(parameter);
         }
-        public void Execute(object? parameter)
+        public void Execute(object parameter)
         {
             execute(parameter);
         }

@@ -11,18 +11,9 @@ public static class IntelGpuLoadWin10
         try
         {
             var category = new PerformanceCounterCategory("GPU Engine");
-
-            // Все instance names
             var instances = category.GetInstanceNames();
-
-            // Фильтруем только движки Intel + 3D/render
-            counters = instances
-                .Where(i =>
-                       i.Contains("engtype_3D") ||
-                       i.Contains("engtype_Compute") ||
-                       i.Contains("engtype_Render"))
-                .Select(i => new PerformanceCounter("GPU Engine", "Utilization Percentage", i))
-                .ToArray();
+            counters = instances.Where(i => i.Contains("engtype_3D") || i.Contains("engtype_Compute") || i.Contains("engtype_Render"))
+                .Select(i => new PerformanceCounter("GPU Engine", "Utilization Percentage", i)).ToArray();
         }
         catch
         {
@@ -46,7 +37,6 @@ public static class IntelGpuLoadWin10
             catch { }
         }
 
-        // Ограничиваем 0–100
         if (sum < 0) sum = 0;
         if (sum > 100) sum = 100;
 

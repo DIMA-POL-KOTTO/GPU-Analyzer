@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -18,6 +20,8 @@ namespace GPU_Analyzer.ViewModels
         private MainViewModel mainVM;
         private readonly IGPUInfoService gpuService;
         private GPUInfo lastGPU = null;
+        private readonly string monitoringTempFile; //промежуточный файл
+        public string MonitoringTempFile => monitoringTempFile;
 
         public string Title => "Мониторинг";
         
@@ -135,7 +139,7 @@ namespace GPU_Analyzer.ViewModels
         }
         public string MemoryMinValueText => $"{MemoryMinValue:F0}";
 
-        public MonitoringViewModel(IGPUInfoService gpuService)
+        public MonitoringViewModel(IGPUInfoService gpuService, int a = 1)
         {
             
             this.gpuService = gpuService;
@@ -152,7 +156,13 @@ namespace GPU_Analyzer.ViewModels
 
             MemoryClockHistory = new ObservableCollection<float>();
 
-            timer = new System.Timers.Timer(1000);
+            monitoringTempFile = Path.Combine(Path.GetTempPath(), "temp_monitoring.tmp");
+            if (!File.Exists(monitoringTempFile))
+                File.WriteAllText(monitoringTempFile, "");
+
+            int interval = Math.Max(100, a * 1000);
+
+            timer = new System.Timers.Timer(interval);
             timer.Elapsed += (s, e) => UpdateMonitoring();
             
         }
@@ -172,7 +182,7 @@ namespace GPU_Analyzer.ViewModels
             if (SelectedGPU == null)
                 return;
 
-            // GPU сменился → очистить данные
+            
             if (lastGPU != SelectedGPU)
             {
                 App.Current.Dispatcher.Invoke(() =>
@@ -250,6 +260,15 @@ namespace GPU_Analyzer.ViewModels
                     {
                         MemoryClockHistory.RemoveAt(0);
                     }
+
+                    var entry = new MonitoringEntry
+                    {
+                        Timestamp = DateTime.Now,
+                        Used = used,
+                        Load = load,
+                        Temp = temp
+                    };
+                    File.AppendAllText(monitoringTempFile, JsonSerializer.Serialize(entry) + Environment.NewLine);
                 });
             }
             catch (System.NullReferenceException)
@@ -262,9 +281,9 @@ namespace GPU_Analyzer.ViewModels
         {
             if (MemoryHistory.Count > 0)
             {
-                MemoryMaxValue = MemoryHistory.Max();
-                MemoryMidValue = MemoryHistory.Average();
+                MemoryMaxValue = MemoryHistory.Max();            
                 MemoryMinValue = MemoryHistory.Min();
+                MemoryMidValue = (MemoryMaxValue + MemoryMinValue)/2;
             }
             else
             {
@@ -273,6 +292,15 @@ namespace GPU_Analyzer.ViewModels
                 MemoryMinValue = 0f;
             }
         }
+        public void UpdateInterval(double ms)
+        {
+            
+
+            timer.Stop();
+            timer.Interval = ms;
+            timer.Start();
+        }
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

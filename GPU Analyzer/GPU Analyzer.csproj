@@ -11,11 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\arial.ttf" />
     <None Remove="StressTests\Shaders\CubePS.hlsl" />
     <None Remove="StressTests\Shaders\CubeVS.hlsl" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Fonts\arial.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="StressTests\Shaders\CubePS.hlsl">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

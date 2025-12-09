@@ -9,5 +9,6 @@ namespace GPU_Analyzer.Models
     public class ReportData
     {
         public GPUInfo GpuInfo { get; set; }
+        public List<MonitoringEntry> MonitoringEntries { get; set; } = new();
     }
 }

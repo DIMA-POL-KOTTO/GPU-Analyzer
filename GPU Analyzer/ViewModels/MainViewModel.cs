@@ -1,5 +1,7 @@
 ﻿using GPU_Analyzer.Models;
+using GPU_Analyzer.Services;
 using GPU_Analyzer.Views;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -9,9 +11,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
-using GPU_Analyzer.Services;
-using GPU_Analyzer.Commands;
 using System.Windows.Input;
+using GPU_Analyzer.ViewModels.Commands;
 
 namespace GPU_Analyzer.ViewModels
 {
@@ -49,7 +50,9 @@ namespace GPU_Analyzer.ViewModels
             SelectedGPU = GPUs.FirstOrDefault();
             gpuInfoVM.Bind(this);
             monitoringVM.Bind(this);
-            
+            monitoringVM.UpdateInterval(settingsVM.MonitoringUpdateInterval);
+            settingsVM.Bind(monitoringVM);
+
             //systemOverviewVM.BindSelectedGPU(this);
             Tabs = new List<TabItemModel>
             {
@@ -57,10 +60,10 @@ namespace GPU_Analyzer.ViewModels
                 new TabItemModel { Title = gpuInfoVM.Title, View = new GPUInfoView { DataContext = gpuInfoVM } },
                 new TabItemModel { Title = monitoringVM.Title, View = new MonitoringView { DataContext = monitoringVM } },
                 new TabItemModel { Title = stressTestsVM.Title, View = new StressTestsView { DataContext = stressTestsVM } },
-                /*
+                
                
                 
-                new TabItemModel { Title = settingsVM.Title, View = new SettingsView { DataContext = settingsVM } },*/
+                new TabItemModel { Title = settingsVM.Title, View = new SettingsView { DataContext = settingsVM } },
 
             };
             SelectedTab = Tabs[0];
@@ -69,16 +72,17 @@ namespace GPU_Analyzer.ViewModels
 
         private void OpenReportWindow()
         {
+
             
-            var vm = new ReportViewModel
+            var vm = App.Services.GetRequiredService<ReportViewModel>();   
+            vm.gpu = this.SelectedGPU;
+            
+            var window = new ReportWindow
             {
-                gpu = this.SelectedGPU
+                DataContext = vm
             };
 
-            var window = new ReportWindow();
-            window.DataContext = vm;
             vm.CloseRequested += () => window.Close();
-
             window.ShowDialog();
         }
 

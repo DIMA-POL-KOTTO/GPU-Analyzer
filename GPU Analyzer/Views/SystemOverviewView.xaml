@@ -1,10 +1,33 @@
 ﻿<UserControl x:Class="GPU_Analyzer.Views.SystemOverviewView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <Grid>
-        <TextBox Text="System Overview Content Goes Here" 
-                 HorizontalAlignment="Center" 
-                 VerticalAlignment="Center" 
-                 FontSize="24"/>
-    </Grid>
+    <StackPanel Margin="20">
+        <TextBlock Text="{Binding sysInfo.ComputerName}" FontSize="18" FontWeight="Bold" Margin="0,0,0,10"/>
+        <TextBlock Text="{Binding sysInfo.OperatingSystem}" Margin="0,0,0,20"/>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <TextBlock Text="Процессор:" FontWeight="SemiBold" Margin="0,0,10,5"/>
+            <TextBlock Text="{Binding sysInfo.CpuName}" Grid.Column="1" TextWrapping="Wrap" Margin="0,0,0,5"/>
+
+            <TextBlock Text="Ядра:" FontWeight="SemiBold" Grid.Row="1" Margin="0,0,10,5"/>
+            <TextBlock Text="{Binding sysInfo.CpuCores}" Grid.Row="1" Grid.Column="1" Margin="0,0,0,5"/>
+
+            <TextBlock Text="Базовая частота:" FontWeight="SemiBold" Grid.Row="2" Margin="0,0,10,5"/>
+            <TextBlock Text="{Binding sysInfo.CpuBaseFr}" Grid.Row="2" Grid.Column="1" Margin="0,0,0,5"/>
+
+            <TextBlock Text="Оперативная память:" FontWeight="SemiBold" Grid.Row="3" Margin="0,0,10,5"/>
+            <TextBlock Text="{Binding sysInfo.RamTotal}" Grid.Row="3" Grid.Column="1" Margin="0,0,0,5"/>
+        </Grid>
+    </StackPanel>
 </UserControl>

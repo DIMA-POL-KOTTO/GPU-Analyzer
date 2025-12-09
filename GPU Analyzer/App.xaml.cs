@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using System.Data;
 using System.Windows;
+using System.IO;
 
 namespace GPU_Analyzer
 {
@@ -24,6 +25,7 @@ namespace GPU_Analyzer
         private void ConfigureServeces(IServiceCollection services)
         {
             services.AddSingleton<IGPUInfoService, GPUInfoService>();
+            services.AddSingleton<ISystemOverviewService, SystemOverviewService>();
 
             services.AddSingleton<MainViewModel>();
             services.AddTransient<GPUInfoViewModel>();
@@ -31,6 +33,17 @@ namespace GPU_Analyzer
             services.AddTransient<SystemOverviewViewModel>();
             services.AddTransient<StressTestsViewModel>();
             services.AddTransient<SettingsViewModel>();
+            services.AddTransient<ReportViewModel>();
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            string file = Path.Combine(Path.GetTempPath(), "temp_monitoring.tmp");
+
+            if (File.Exists(file))
+                File.Delete(file);
+
+            base.OnExit(e);
         }
 
     }

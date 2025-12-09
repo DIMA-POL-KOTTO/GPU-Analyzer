@@ -63,13 +63,12 @@ namespace GPU_Analyzer.Services
         {
             if (string.IsNullOrEmpty(pnpId)) return "Unknown";
 
-            // Пример: PCI\VEN_10DE&DEV_2206...
             if (pnpId.Contains("VEN_10DE")) return "NVIDIA";
             if (pnpId.Contains("VEN_1002")) return "AMD";
             if (pnpId.Contains("VEN_8086") || pnpId.Contains("VEN_8087")) return "Intel";
             return "Unknown";
         }
-        //Метод для преобразования байтов в МБ
+        //преобразование в мб
         private static string FormatMemory(object obj)
         {
             if (obj == null) return "N/A";
@@ -107,7 +106,6 @@ namespace GPU_Analyzer.Services
         {
             if (gpu.Name.Contains("Intel"))
             {
-                //Используем отдельный провайдер для Intel
                 return IntelGpuLoadWin10.GetLoad();
             }
             float loadGPU = 0;
@@ -121,7 +119,7 @@ namespace GPU_Analyzer.Services
 
                     foreach (var sensor in hardware.Sensors)
                     {
-                        if (sensor.SensorType == SensorType.Load)
+                        if (sensor.SensorType == SensorType.Load && sensor.Name.Contains("Core", StringComparison.OrdinalIgnoreCase))
                         {
                             loadGPU = sensor.Value ?? 0;
 
@@ -169,7 +167,7 @@ namespace GPU_Analyzer.Services
                     foreach (var sensor in hardware.Sensors)
                     {
                         
-                        if (sensor.SensorType == SensorType.Clock && sensor.Name.Contains("Core"))
+                        if (sensor.SensorType == SensorType.Clock && sensor.Name == "GPU Core") //.Contains("Core")
                         {
                             coreClock = sensor.Value ?? 0;
                         }
@@ -193,8 +191,7 @@ namespace GPU_Analyzer.Services
 
                     foreach (var sensor in hardware.Sensors)
                     {                      
-                        if (sensor.SensorType == SensorType.Clock &&
-                            sensor.Name.Contains("Memory"))
+                        if (sensor.SensorType == SensorType.Clock && sensor.Name == "GPU Memory") //.Contains("Memory")
                         {
                             memoryClock = sensor.Value ?? 0;
                         }

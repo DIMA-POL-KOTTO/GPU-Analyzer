@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GPU_Analyzer.StressTests;
-using GPU_Analyzer.Commands;
+using GPU_Analyzer.ViewModels.Commands;
 using System.Windows.Threading;
 
 

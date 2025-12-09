@@ -9,7 +9,7 @@ using System.Windows.Data;
 using System.Windows.Media;
 
 
-namespace GPU_Analyzer.Converters
+namespace GPU_Analyzer.ViewModels.Converters
 {
     public class GraphConverter : IMultiValueConverter
     {
@@ -44,7 +44,7 @@ namespace GPU_Analyzer.Converters
             {
                 double x = i * step;
                 double norm = (history[i] - min) / (max - min);
-                double y = height - (norm * height);
+                double y = height - norm * height;
                 points.Add(new Point(x, y));
             }
             return points;

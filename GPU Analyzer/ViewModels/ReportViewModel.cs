@@ -1,16 +1,18 @@
-﻿using System;
+﻿using GPU_Analyzer.ViewModels.Commands;
+using GPU_Analyzer.Models;
+using GPU_Analyzer.Services;
+using GPU_Analyzer.Services.ReportGenerators;
+using SharpDX.Direct3D11;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
-using GPU_Analyzer.Models;
-using GPU_Analyzer.Commands;
-using GPU_Analyzer.Services;
-using SharpDX.Direct3D11;
-using GPU_Analyzer.Services.ReportGenerators;
 using System.Windows.Input;
+using System.IO;
 
 namespace GPU_Analyzer.ViewModels
 {
@@ -29,10 +31,11 @@ namespace GPU_Analyzer.ViewModels
         public ICommand GenerateXmlCommand { get; }
         public ICommand GenerateTxtCommand { get; }
         public ICommand GeneratePdfCommand { get; }
+        private readonly MonitoringViewModel monitoringVM;
 
-        public ReportViewModel()
+        public ReportViewModel(MonitoringViewModel monitoringVM)
         {
-            
+            this.monitoringVM = monitoringVM;
             BrowseCommand = new RelayCommand(_ => Browse());
             GenerateJsonCommand = new RelayCommand(async _ => await GenerateReportAsync(new JsonReportGenerator(), ".json"));
             GenerateXmlCommand = new RelayCommand(async _ => await GenerateReportAsync(new XmlReportGenerator(), ".xml"));
@@ -77,13 +80,35 @@ namespace GPU_Analyzer.ViewModels
             if (!SavePath.EndsWith(extension))
                 SavePath += extension;
 
-            var data = new ReportData { GpuInfo = gpu };
+            var monitoring = LoadMonitoringData(monitoringVM.MonitoringTempFile);
+            var data = new ReportData { GpuInfo = gpu, MonitoringEntries = monitoring };
 
             await generator.GenerateReportAsync(data, SavePath);
 
             // закрываем окно
             CloseRequested?.Invoke();
 
+        }
+
+        private List<MonitoringEntry> LoadMonitoringData(string file)
+        {
+            var list = new List<MonitoringEntry>();
+
+            if (!File.Exists(file))
+                return list;
+
+            foreach (var line in File.ReadAllLines(file))
+            {
+                try
+                {
+                    var entry = JsonSerializer.Deserialize<MonitoringEntry>(line);
+                    if (entry != null)
+                        list.Add(entry);
+                }
+                catch { }
+            }
+
+            return list;
         }
 
         public Action CloseRequested { get; set; }
