@@ -4,13 +4,18 @@
              >
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Button Grid.Row="1"
+        <Button Grid.Row="0"
         Content="Запустить стресс-тест"
         Command="{Binding StartStressTestCommand}"
-        Padding="10" Margin="10" HorizontalAlignment="Center"/>
+        Padding="10" Margin="10" HorizontalAlignment="Center" Width="150"/>
+        
+        <Button Grid.Row="1" Content="Диагностика GPU"
+        Padding="10" Margin="10"
+        Command="{Binding OpenDiagnosticsCommand}" Width="150"/>
+
     </Grid>
 </UserControl>

@@ -32,15 +32,17 @@ namespace GPU_Analyzer.ViewModels
         public ICommand GenerateTxtCommand { get; }
         public ICommand GeneratePdfCommand { get; }
         private readonly MonitoringViewModel monitoringVM;
-
-        public ReportViewModel(MonitoringViewModel monitoringVM)
+        private readonly ISystemOverviewService systemOverviewService;
+        public ReportViewModel(MonitoringViewModel monitoringVM, ISystemOverviewService systemOverviewService)
         {
             this.monitoringVM = monitoringVM;
+            this.systemOverviewService = systemOverviewService;
             BrowseCommand = new RelayCommand(_ => Browse());
             GenerateJsonCommand = new RelayCommand(async _ => await GenerateReportAsync(new JsonReportGenerator(), ".json"));
             GenerateXmlCommand = new RelayCommand(async _ => await GenerateReportAsync(new XmlReportGenerator(), ".xml"));
             GenerateTxtCommand = new RelayCommand(async _ => await GenerateReportAsync(new TxtReportGenerator(), ".txt"));
             GeneratePdfCommand = new RelayCommand(async _ => await GenerateReportAsync(new PdfReportGenerator(), ".pdf"));
+            this.systemOverviewService = systemOverviewService;
         }
 
         private void Browse()
@@ -81,10 +83,18 @@ namespace GPU_Analyzer.ViewModels
                 SavePath += extension;
 
             var monitoring = LoadMonitoringData(monitoringVM.MonitoringTempFile);
-            var data = new ReportData { GpuInfo = gpu, MonitoringEntries = monitoring };
+            var data = new ReportData { SystemInfo = systemOverviewService.GetSystemInfo(), GpuInfo = gpu, MonitoringEntries = monitoring };
 
             await generator.GenerateReportAsync(data, SavePath);
-
+            //удаление временного файла
+            try
+            {
+                if (File.Exists(monitoringVM.MonitoringTempFile))
+                {
+                    File.Delete(monitoringVM.MonitoringTempFile);
+                }
+            }
+            catch { }
             // закрываем окно
             CloseRequested?.Invoke();
 

@@ -141,10 +141,108 @@
         <TextBlock Text="Частота ядра:" Grid.Row="3" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
         <TextBlock Text="{Binding CoreClockText}" Grid.Row="3" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
 
-        <!-- MemoryClock -->
+        <Border Grid.Row="3" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+            <Grid>
+                <Canvas x:Name="CoreClockCanvas" Height="90" VerticalAlignment="Center">
+
+                    <!-- Сетка и оси -->
+                    <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                    <!-- Горизонтальные линии сетки -->
+                    <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                    <!-- Подписи оси Y -->
+                        <!-- Max -->
+                        <Grid Canvas.Left="-70" Canvas.Top="0" Width="65" Height="20">
+                            <TextBlock Text="{Binding CoreClockMax, StringFormat='{}{0:f0} МГц'}"
+                            TextAlignment="Right"
+                            VerticalAlignment="Center"/>                
+                        </Grid>
+
+                        <!-- Mid -->
+                        <Grid Canvas.Left="-70" Canvas.Top="37" Width="65" Height="20">
+                            <TextBlock Text="{Binding CoreClockMid, StringFormat='{}{0:f0} МГц'}"
+                            TextAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- Min -->
+                        <Grid Canvas.Left="-70" Canvas.Top="75" Width="65" Height="20">
+                            <TextBlock Text="{Binding CoreClockMin, StringFormat='{}{0:f0} МГц'}"
+                            TextAlignment="Right"
+                            VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- График -->
+                    <Polyline Stroke="Lime">
+                        <Polyline.Points>
+                            <MultiBinding Converter="{StaticResource GraphConverter}">
+                                <Binding Path="CoreClockHistory"/>
+                                <Binding ElementName="CoreClockCanvas" Path="ActualWidth"/>
+                                <Binding ElementName="CoreClockCanvas" Path="ActualHeight"/>
+                            </MultiBinding>
+                        </Polyline.Points>
+                    </Polyline>
+                </Canvas>
+            </Grid>
+        </Border>
+
+            <!-- MemoryClock -->
         <TextBlock Text="Частота памяти:" Grid.Row="4" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
         <TextBlock Text="{Binding MemoryClockText}" Grid.Row="4" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
 
-    </Grid>
+        <Border Grid.Row="4" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+            <Grid>
+                <Canvas x:Name="MemoryClockCanvas" Height="90" VerticalAlignment="Center">
+
+                    <!-- Сетка и оси -->
+                    <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                    <!-- Горизонтальные линии сетки -->
+                    <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=GpuTempCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                    <!-- Подписи оси Y -->
+                        <!-- Max -->
+                        <Grid Canvas.Left="-70" Canvas.Top="0" Width="65" Height="20">
+                            <TextBlock Text="{Binding MemoryClockMax, StringFormat='{}{0:f0} МГц'}"
+                               TextAlignment="Right"
+                               VerticalAlignment="Center"/>     
+                        </Grid>
+
+                        <!-- Mid -->
+                        <Grid Canvas.Left="-70" Canvas.Top="37" Width="65" Height="20">
+                            <TextBlock Text="{Binding MemoryClockMid, StringFormat='{}{0:f0} МГц'}"
+                               TextAlignment="Right"
+                               VerticalAlignment="Center"/> 
+                        </Grid>
+
+                        <!-- Min -->
+                        <Grid Canvas.Left="-70" Canvas.Top="75" Width="65" Height="20">
+                            <TextBlock Text="{Binding MemoryClockMin, StringFormat='{}{0:f0} МГц'}"
+                               TextAlignment="Right"
+                               VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <!-- График -->
+                    <Polyline Stroke="Lime">
+                        <Polyline.Points>
+                            <MultiBinding Converter="{StaticResource GraphConverter}">
+                                <Binding Path="MemoryClockHistory"/>
+                                <Binding ElementName="MemoryClockCanvas" Path="ActualWidth"/>
+                                <Binding ElementName="MemoryClockCanvas" Path="ActualHeight"/>
+                            </MultiBinding>
+                        </Polyline.Points>
+                    </Polyline>
+                </Canvas>
+            </Grid>
+        </Border>
+
+        </Grid>
     </ScrollViewer>
 </UserControl>

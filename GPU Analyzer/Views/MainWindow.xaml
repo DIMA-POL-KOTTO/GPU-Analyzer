@@ -1,0 +1,56 @@
+﻿<Window x:Class="GPU_Analyzer.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GPU_Analyzer"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Панель с выпадающим списком -->
+            <RowDefinition Height="*"/>
+            <!-- Вкладки -->
+        </Grid.RowDefinitions>
+        <!-- Панель с выпадающим списком -->
+        <Border Grid.Row="0" Background="LightGray" Padding="10">
+            <StackPanel Orientation="Horizontal">
+                <!-- Выпадающий список для выбора GPU -->
+                <TextBlock Text="Выберите GPU:" 
+                          VerticalAlignment="Center" 
+                          FontWeight="Bold"
+                          Margin="0,0,10,0"/>
+
+                <ComboBox ItemsSource="{Binding GPUs}"
+                         SelectedItem="{Binding SelectedGPU}"
+                         DisplayMemberPath="Name"
+                         Width="300"
+                         Margin="0,0,20,0"/>
+
+                <!-- Правая часть: кнопка отчёта -->
+                <Button Grid.Column="1"
+                Content="Отчёт"
+                Width="80"
+                
+                Margin="200,0,0,0"
+                Command="{Binding OpenReportWindowCommand}"/>
+            </StackPanel>
+            
+        </Border>
+        <TabControl Grid.Row="1" ItemsSource="{Binding Tabs}"
+            SelectedItem="{Binding SelectedTab}">
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Title}" FontSize="16" />
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentPresenter Content="{Binding View}"/>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</Window>

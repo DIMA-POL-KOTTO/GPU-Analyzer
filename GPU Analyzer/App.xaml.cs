@@ -34,6 +34,9 @@ namespace GPU_Analyzer
             services.AddTransient<StressTestsViewModel>();
             services.AddTransient<SettingsViewModel>();
             services.AddTransient<ReportViewModel>();
+            services.AddTransient<DiagnosticsViewModel>();
+            services.AddTransient<ReferenceViewModel>();
+            services.AddTransient<VramCheckViewModel>();
         }
 
         protected override void OnExit(ExitEventArgs e)

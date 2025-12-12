@@ -28,5 +28,11 @@ namespace GPU_Analyzer.Views
         {
 
         }
+
+        private void OpenDiagnostics_Click(object sender, RoutedEventArgs e)
+        {          
+            
+        }
+    
     }
 }

@@ -11,6 +11,7 @@ namespace GPU_Analyzer.Services.ReportGenerators
         public async Task<string> GenerateReportAsync(ReportData data, string outputPath)
         {
             var gpu = data.GpuInfo;
+            var sys = data.SystemInfo;
 
             Document doc = new Document(PageSize.A4, 40, 40, 40, 40);
             PdfWriter.GetInstance(doc, new FileStream(outputPath, FileMode.Create));
@@ -25,7 +26,7 @@ namespace GPU_Analyzer.Services.ReportGenerators
             Font textFont = new Font(bf, 12);
 
             // Заголовок
-            doc.Add(new Paragraph("ОТЧЁТ GPU", titleFont));
+            doc.Add(new Paragraph("ОТЧЁТ", titleFont));
             doc.Add(new Paragraph("\n"));
 
             // Функция удобного добавления
@@ -35,7 +36,17 @@ namespace GPU_Analyzer.Services.ReportGenerators
                 doc.Add(new Paragraph("\n", textFont));
             }
 
-            // Раздел GPU
+           
+            doc.Add(new Paragraph("Информация о системе", sectionFont));
+            doc.Add(new Paragraph("----------------------------------------------------------------------------------------------------------------\n", textFont));
+
+            AddLine("Имя ПК", sys.ComputerName);
+            AddLine("ОС", sys.OperatingSystem);
+            AddLine("CPU", sys.CpuName);
+            AddLine("Ядер CPU", sys.CpuCores);
+            AddLine("Базовая частота CPU", sys.CpuBaseFr);
+            AddLine("ОЗУ", sys.RamTotal);
+
             doc.Add(new Paragraph("Информация о GPU", sectionFont));
             doc.Add(new Paragraph("----------------------------------------------------------------------------------------------------------------\n", textFont));
 

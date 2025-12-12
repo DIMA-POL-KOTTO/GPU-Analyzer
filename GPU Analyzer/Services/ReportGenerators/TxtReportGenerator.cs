@@ -13,8 +13,20 @@ namespace GPU_Analyzer.Services.ReportGenerators
         public async Task<string> GenerateReportAsync(ReportData data, string outputPath)
         {
             var gpu = data.GpuInfo;
+            var sys = data.SystemInfo;
             StringBuilder sb = new StringBuilder();
-            sb.AppendLine("ОТЧЁТ GPU");
+            sb.AppendLine("ОТЧЁТ");
+            sb.AppendLine("==================================");
+            sb.AppendLine("Информация о системе");
+            sb.AppendLine("----------------------------------");
+            sb.AppendLine($"Имя ПК: {sys.ComputerName}");
+            sb.AppendLine($"ОС: {sys.OperatingSystem}");
+            sb.AppendLine($"Процессор: {sys.CpuName}");
+            sb.AppendLine($"Ядер CPU: {sys.CpuCores}");
+            sb.AppendLine($"Базовая частота CPU: {sys.CpuBaseFr}");
+            sb.AppendLine($"ОЗУ: {sys.RamTotal}");
+            sb.AppendLine();
+            sb.AppendLine("Информация о GPU");
             sb.AppendLine("==================================");
             sb.AppendLine($"Имя: {gpu.Name}");
             sb.AppendLine($"Тип GPU: {gpu.Vendor}");
