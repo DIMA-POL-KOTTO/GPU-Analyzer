@@ -160,8 +160,7 @@ namespace GPU_Analyzer.StressTests
             CreateCubeGeometry();
             CreateInstanceData();
             CreateMatrices();
-            Services.DxDeviceService.Device = _device;
-            Services.DxDeviceService.Context = _context;
+            
         }
 
         private void CreateShaders()

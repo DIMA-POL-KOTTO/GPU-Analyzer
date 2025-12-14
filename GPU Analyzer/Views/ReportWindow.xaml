@@ -13,14 +13,14 @@
             
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal">
-            <TextBox Width="330" Text="{Binding SavePath}" Margin="0,0,10,0"/>
-            <Button Content="Обзор..." Command="{Binding BrowseCommand}" Width="100"/>
+            <TextBox Width="175" Text="{Binding SavePath}" Margin="0,0,10,0"/>
+            <Button Content="Обзор..." Command="{Binding BrowseCommand}" Width="75"/>
         </StackPanel>
         <StackPanel Grid.Row="1">
-            <Button Content="JSON" Command="{Binding GenerateJsonCommand}" />
-            <Button Content="XML" Command="{Binding GenerateXmlCommand}" />
-            <Button Content="TXT" Command="{Binding GenerateTxtCommand}" />
-            <Button Content="PDF" Command="{Binding GeneratePdfCommand}" />
+            <Button Content="JSON" Command="{Binding GenerateJsonCommand}" Margin="5" />
+            <Button Content="XML" Command="{Binding GenerateXmlCommand}" Margin="5"/>
+            <Button Content="TXT" Command="{Binding GenerateTxtCommand}" Margin="5"/>
+            <Button Content="PDF" Command="{Binding GeneratePdfCommand}" Margin="5"/>
         </StackPanel>
 
         

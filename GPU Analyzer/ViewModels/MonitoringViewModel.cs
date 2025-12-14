@@ -98,6 +98,34 @@ namespace GPU_Analyzer.ViewModels
         }
         public string MemoryClockText => $"{MemoryClock:F0} МГц";
         public ObservableCollection<float> MemoryClockHistory { get; set; }
+
+        // FAN_RPM
+        private float fanRpm;
+        public float FanRpm
+        {
+            get => fanRpm;
+            set
+            {
+                fanRpm = value;
+                OnPropertyChanged(nameof(FanRpm));
+            }
+        }
+        public string FanRpmText => $"{FanRpm:F0} RPM";
+        public ObservableCollection<float> FanRpmHistory { get; set; }
+
+        //FAN_PERCENT
+        private float fanPercent;
+        private float FanPercent
+        {
+            get => fanPercent;
+            set
+            {
+                fanPercent = value;
+                OnPropertyChanged(nameof(FanPercent));
+            }
+        }
+        public string FanPercentText => $"{FanPercent:F0}%";
+        public ObservableCollection<float> FanPercentHistory { get; set; }
         // other
         public GPUInfo SelectedGPU => mainVM.SelectedGPU;
 
@@ -221,7 +249,85 @@ namespace GPU_Analyzer.ViewModels
         }
         public string MemoryClockMinText => $"{MemoryClockMin:F0}";
 
+        // FanRpm
+        private float fanRpmMax;
+        public float FanRpmMax
+        {
+            get => fanRpmMax;
+            set
+            {
+                fanRpmMax = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FanRpmMaxText));
+            }
+        }
+        public string FanRpmMaxText => $"{FanRpmMax:F0}";
 
+        private float fanRpmMid;
+        public float FanRpmMid
+        {
+            get => fanRpmMid;
+            set
+            {
+                fanRpmMid = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FanRpmMidText));
+            }
+        }
+        public string FanRpmMidText => $"{FanRpmMid:F0}";
+
+        private float fanRpmMin;
+        public float FanRpmMin
+        {
+            get => fanRpmMin;
+            set
+            {
+                fanRpmMin = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FanRpmMinText));
+            }
+        }
+        public string FanRpmMinText => $"{FanRpmMin:F0}";
+
+        //FanPercent
+        private float fanPercentMax;
+        public float FanPercentMax
+        {
+            get => fanPercentMax;
+            set
+            {
+                fanPercentMax = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FanPercentMaxText));
+            }
+        }
+        public string FanPercentMaxText => $"{FanPercentMax:F0}";
+
+        private float fanPercentMid;
+        public float FanPercentMid
+        {
+            get => fanPercentMid;
+            set
+            {
+                fanPercentMid = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FanPercentMidText));
+            }
+        }
+        public string FanPercentMidText => $"{FanPercentMid:F0}";
+
+        private float fanPercentMin;
+        public float FanPercentMin
+        {
+            get => fanPercentMin;
+            set
+            {
+                fanPercentMin = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(FanPercentMinText));
+            }
+        }
+        public string FanPercentMinText => $"{FanPercentMin:F0}";
         public MonitoringViewModel(IGPUInfoService gpuService, int a = 1)
         {
             intelGpuZ = new IntelGpuZ();
@@ -246,6 +352,16 @@ namespace GPU_Analyzer.ViewModels
             MemoryClockMax = 0f;
             MemoryClockMid = 0f;
             MemoryClockMin = 0f;
+
+            FanRpmHistory = new ObservableCollection<float>();
+            FanRpmMax = 0f;
+            FanRpmMid = 0f;
+            FanRpmMin = 0f;
+
+            FanPercentHistory = new ObservableCollection<float>();
+            FanPercentMax = 0f;
+            FanPercentMid = 0f;
+            FanPercentMin = 0f;
 
             monitoringTempFile = Path.Combine(Path.GetTempPath(), "temp_monitoring.tmp");
             if (!File.Exists(monitoringTempFile))
@@ -283,6 +399,8 @@ namespace GPU_Analyzer.ViewModels
                     GpuTempHistory.Clear();
                     CoreClockHistory.Clear();
                     MemoryClockHistory.Clear();
+                    FanRpmHistory.Clear();
+                    FanPercentHistory.Clear();
 
                     MemoryMaxValue = 0;
                     MemoryMidValue = 0;
@@ -293,29 +411,38 @@ namespace GPU_Analyzer.ViewModels
                     MemoryClockMax = 0;
                     MemoryClockMid = 0;
                     MemoryClockMin = 0;
+                    FanRpmMax = 0;
+                    FanRpmMid = 0;
+                    FanRpmMin = 0;
+                    FanPercentMax = 0;
+                    FanPercentMid = 0;
+                    FanPercentMin = 0;
 
                     OnPropertyChanged(nameof(MemoryHistory));
                     OnPropertyChanged(nameof(GpuLoadHistory));
                     OnPropertyChanged(nameof(GpuTempHistory));
                     OnPropertyChanged(nameof(CoreClockHistory));
                     OnPropertyChanged(nameof(MemoryClockHistory));
+                    OnPropertyChanged(nameof(FanRpmHistory));
+                    OnPropertyChanged(nameof(FanPercentHistory));
                 });
 
                 lastGPU = SelectedGPU;
             }
 
-            float used, load, temp, core_clock, mem_clock;
+            float used, load, temp, core_clock, mem_clock, f_rpm, f_per;
             if (SelectedGPU.Name.Contains("Intel", StringComparison.OrdinalIgnoreCase))
             {
                 used = gpuService.GetMemoryUsed(SelectedGPU);
                 load = gpuService.GetLoadGPU(SelectedGPU);
+                f_rpm = 0;
+                f_per = 0;
                 if (intelGpuZ != null && intelGpuZ.IsAvailable && intelGpuZ.TryUpdate())
-                {
-                    
-                    temp = intelGpuZ.Temperature;
-                    
+                {               
+                    temp = intelGpuZ.Temperature;               
                     core_clock = intelGpuZ.CoreClock;
                     mem_clock = intelGpuZ.MemoryClock;
+                    
                 }
                 else
                 {
@@ -329,6 +456,7 @@ namespace GPU_Analyzer.ViewModels
                 temp = gpuService.GetTemperatureGPU(SelectedGPU);
                 core_clock = gpuService.GetCoreClock(SelectedGPU);
                 mem_clock = gpuService.GetMemoryClock(SelectedGPU);
+                (f_rpm, f_per) = gpuService.GetFan(SelectedGPU);
             }
                 
             //gpuService.DebugGPUInfo_Sensors(); //потом убрать
@@ -382,6 +510,25 @@ namespace GPU_Analyzer.ViewModels
                         MemoryClockHistory.RemoveAt(0);
                     }
 
+                    FanRpm = f_rpm;
+                    FanRpmHistory.Add(f_rpm);
+                    UpdateValues(FanRpmHistory, val => FanRpmMax = val, val => FanRpmMid = val, val => FanRpmMin = val);
+                    OnPropertyChanged(nameof(FanRpmHistory));
+                    if (FanRpmHistory.Count > 100)
+                    {
+                        FanRpmHistory.RemoveAt(0);
+                    }
+
+                    FanPercent = f_per;
+                    FanPercentHistory.Add(f_per);
+                    UpdateValues(FanPercentHistory, val => FanPercentMax = val, val => FanPercentMid = val, val => FanPercentMin = val);
+                    OnPropertyChanged(nameof(FanPercentHistory));
+                    if (FanPercentHistory.Count > 100)
+                    {
+                        FanPercentHistory.RemoveAt(0);
+                    }
+
+
                     var entry = new MonitoringEntry
                     {
                         Timestamp = DateTime.Now,
@@ -391,6 +538,7 @@ namespace GPU_Analyzer.ViewModels
                         Temp = temp,
                         CoreClock = core_clock,
                         MemoryClock = mem_clock
+
                     };
                     File.AppendAllText(monitoringTempFile, JsonSerializer.Serialize(entry) + Environment.NewLine);
                 });

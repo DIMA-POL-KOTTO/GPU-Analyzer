@@ -149,9 +149,7 @@ namespace GPU_Analyzer.ViewModels
                 }
             }
 
-            return errors.Length == 0
-                ? $"√ VRAM ({testSizeMB} МБ): ошибок не найдено."
-                : $"x Найдено ошибок:\n{errors}";
+            return errors.Length == 0 ? $"√ VRAM ({testSizeMB} МБ): ошибок не найдено." : $"x Найдено ошибок:\n{errors}";
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

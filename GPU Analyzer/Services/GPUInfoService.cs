@@ -201,6 +201,34 @@ namespace GPU_Analyzer.Services
             return memoryClock;
         }
 
+        public (float, float) GetFan(GPUInfo gpu)
+        {
+            float rpm = 0;
+            float percent = 0;
+            foreach(var hardware in computer.Hardware)
+            {
+                hardware.Update();
+                if (hardware.HardwareType == HardwareType.GpuNvidia || hardware.HardwareType == HardwareType.GpuAmd || hardware.HardwareType == HardwareType.GpuIntel)
+                {
+                    if (hardware.Name != gpu.Name)
+                        continue;
+
+                    foreach (var sensor in hardware.Sensors)
+                    {
+                        if (sensor.SensorType == SensorType.Fan) //.Contains("Memory")
+                        {
+                            rpm = sensor.Value ?? 0;
+                        }
+                        if (sensor.SensorType == SensorType.Control)
+                        {
+                            percent = sensor.Value ?? 0;
+                        }
+                    }
+                }
+            }
+            return (rpm, percent);
+        }
+
         //какие вообще сенсоры я могу прочитать с GPU
         public void DebugGPUInfo_Sensors()
         {

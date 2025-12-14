@@ -19,6 +19,8 @@
             <RowDefinition Height="110"/>
             <RowDefinition Height="110"/>
             <RowDefinition Height="110"/>
+            <RowDefinition Height="110"/>
+            <RowDefinition Height="110"/>
 
         </Grid.RowDefinitions>
         <!-- MemoryUsed -->
@@ -242,6 +244,84 @@
                 </Canvas>
             </Grid>
         </Border>
+
+
+        <!-- FanRpm -->
+        <TextBlock Text="Вращение вентиляторов:" Grid.Row="5" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+        <TextBlock Text="{Binding FanRpmText}" Grid.Row="5" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
+        <Border Grid.Row="5" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+            <Grid>
+                <Canvas x:Name="FanRpmCanvas" Height="90" VerticalAlignment="Center">
+
+                    <!-- Сетка и оси -->
+                    <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                    <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=FanRpmCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                    <!-- Горизонтальные линии сетки -->
+                    <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=FanRpmCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=FanRpmCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                    <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=FanRpmCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                    <!-- Подписи оси Y -->
+                    <TextBlock Text="{Binding FanRpmMax, StringFormat='{}{0:f0}'}" 
+                    Canvas.Left="-30" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <TextBlock Text="{Binding FanRpmMid, StringFormat='{}{0:f0}'}" 
+                    Canvas.Left="-30" Canvas.Top="37" HorizontalAlignment="Center" VerticalAlignment="Top"/>
+                    <TextBlock Text="{Binding FanRpmMin, StringFormat='{}{0:f0}'}" 
+                    Canvas.Left="-30" Canvas.Top="78" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                    <!-- График -->
+                    <Polyline Stroke="Red">
+                        <Polyline.Points>
+                            <MultiBinding Converter="{StaticResource GraphConverter}">
+                                <Binding Path="FanRpmHistory"/>
+                                <Binding ElementName="FanRpmCanvas" Path="ActualWidth"/>
+                                <Binding ElementName="FanRpmCanvas" Path="ActualHeight"/>
+                            </MultiBinding>
+                        </Polyline.Points>
+                    </Polyline>
+                </Canvas>
+            </Grid>
+        </Border>
+
+            <!-- FanPercent -->
+            <TextBlock Text="Использование вентиляторов:" Grid.Row="6" Grid.Column="0" FontWeight="SemiBold" Margin="0,0,8,6" VerticalAlignment="Center" />
+            <TextBlock Text="{Binding FanPercentText}" Grid.Row="6" Grid.Column="1" Margin="0,0,0,6" VerticalAlignment="Center" TextWrapping="Wrap" />
+
+            <Border Grid.Row="6" Grid.Column="2" Background="LightGray" Margin="10,5,15,5" BorderBrush="#3E3E40" BorderThickness="1">
+                <Grid>
+                    <Canvas x:Name="FanPercentCanvas" Height="90" VerticalAlignment="Center">
+
+                        <!-- Сетка и оси -->
+                        <Line X1="0" Y1="0" X2="0" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+                        <Line X1="0" Y1="90" X2="{Binding ActualWidth, ElementName=FanPercentCanvas}" Y2="90" Stroke="#3E3E40" StrokeThickness="1"/>
+
+                        <!-- Горизонтальные линии сетки -->
+                        <Line X1="0" Y1="22.5" X2="{Binding ActualWidth, ElementName=FanPercentCanvas}" Y2="22.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                        <Line X1="0" Y1="45" X2="{Binding ActualWidth, ElementName=FanPercentCanvas}" Y2="45" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+                        <Line X1="0" Y1="67.5" X2="{Binding ActualWidth, ElementName=FanPercentCanvas}" Y2="67.5" Stroke="#3E3E40" StrokeThickness="0.5" Opacity="0.5"/>
+
+                        <!-- Подписи оси Y -->
+                        <TextBlock Text="100%" 
+                            Canvas.Left="-36" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                        <TextBlock Text="50%" 
+                            Canvas.Left="-33" Canvas.Top="37" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        <TextBlock Text="0%" 
+                            Canvas.Left="-30" Canvas.Top="75" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                        <!-- График -->
+                        <Polyline Stroke="Lime">
+                            <Polyline.Points>
+                                <MultiBinding Converter="{StaticResource GraphConverter}" ConverterParameter="Fixed100">
+                                    <Binding Path="FanPercentHistory"/>
+                                    <Binding ElementName="FanPercentCanvas" Path="ActualWidth"/>
+                                    <Binding ElementName="FanPercentCanvas" Path="ActualHeight"/>
+                                </MultiBinding>
+                            </Polyline.Points>
+                        </Polyline>
+                    </Canvas>
+                </Grid>
+            </Border>
 
         </Grid>
     </ScrollViewer>

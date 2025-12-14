@@ -15,6 +15,7 @@ namespace GPU_Analyzer.Services
         float GetTemperatureGPU(GPUInfo gpu);
         float GetCoreClock(GPUInfo gpu);
         float GetMemoryClock(GPUInfo gpu);
+        (float, float) GetFan(GPUInfo gpu);
         void DebugGPUInfo_Sensors();
         void DebugGPUInfo_WMI();
     }
