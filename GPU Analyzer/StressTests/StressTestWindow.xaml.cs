@@ -32,21 +32,18 @@ namespace GPU_Analyzer.StressTests
 
         private void OnLoaded(object sender, RoutedEventArgs e)
         {
-            // Получаем HWND окна WPF
+            // получение HWND окна WPF
             var hwnd = new WindowInteropHelper(this).Handle;
 
-            // Можно использовать ActualWidth/ActualHeight, или задать фиксированный размер
             uint w = Math.Max(1, (uint)ActualWidth);
             uint h = Math.Max(1, (uint)ActualHeight);
 
-            // Создаём рендер и стартуем
             _renderer = new DxSimpleRenderer(hwnd, w, h);
             _renderer.Start();
         }
 
         private void OnClosed(object sender, EventArgs e)
         {
-            // Останавливаем и очищаем
             _renderer?.Stop();
             _renderer = null;
         }

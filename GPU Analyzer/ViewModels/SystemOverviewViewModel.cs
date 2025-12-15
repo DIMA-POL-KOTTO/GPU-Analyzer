@@ -17,8 +17,7 @@ namespace GPU_Analyzer.ViewModels
         public SystemOverviewViewModel(ISystemOverviewService systemInfoService)
         {
             sysInfo = systemInfoService.GetSystemInfo();
-            System.Diagnostics.Debug.WriteLine($"[SystemOverview] ComputerName: '{sysInfo.ComputerName}'");
-            System.Diagnostics.Debug.WriteLine($"[SystemOverview] CPU: '{sysInfo.CpuName}'");
+            
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

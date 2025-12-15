@@ -23,15 +23,12 @@ namespace GPU_Analyzer.ViewModels
             get => selectedTab;
             set { selectedTab = value; OnPropertyChanged(); }
         }
-
-        // выбранный GPU (назначается при открытии окна)
         public GPUInfo SelectedGPU { get; set; }
         private MonitoringViewModel monitoringVM;
         public ReferenceViewModel referenceVM { get; }
         public VramCheckViewModel vramVM {  get; }
         public DiagnosticsViewModel(ReferenceViewModel referenceVM, VramCheckViewModel vramVM, MonitoringViewModel monitoringVM)
         {
-            // передаём ссылку на SelectedGPU в дочерние VM, если нужно
             this.referenceVM = referenceVM;
             this.vramVM = vramVM;
             this.monitoringVM = monitoringVM;

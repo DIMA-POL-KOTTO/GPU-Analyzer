@@ -29,7 +29,7 @@ namespace GPU_Analyzer.ViewModels
         private void StartStressTest()
         {
             var window = new StressTests.StressTestWindow();
-            window.Show(); // ← Открываем окно WPF
+            window.Show(); // открываем окно WPF
         }
         private void OpenDiagnostics()
         {

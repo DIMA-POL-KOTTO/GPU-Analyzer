@@ -18,7 +18,7 @@ struct VS_OUT
     float4 color : COLOR;
 };
 
-// Функция создания матрицы вращения вокруг оси Y
+// функция создания матрицы вращения вокруг оси Y
 float4x4 rotationY(float angle)
 {
     float s, c;
@@ -32,7 +32,7 @@ float4x4 rotationY(float angle)
     );
 }
 
-// Функция создания матрицы вращения вокруг оси X
+// функция создания матрицы вращения вокруг оси X
 float4x4 rotationX(float angle)
 {
     float s, c;
@@ -46,7 +46,7 @@ float4x4 rotationX(float angle)
     );
 }
 
-// Функция создания матрицы вращения вокруг оси Z
+// функция создания матрицы вращения вокруг оси Z
 float4x4 rotationZ(float angle)
 {
     float s, c;
@@ -64,15 +64,12 @@ VS_OUT main(VS_IN input)
 {
     VS_OUT output;
     
-    // Комбинируем начальное вращение инстанса с анимацией от времени
-    float rotationAngle = input.instanceRot + time * 0.5f; // 0.5 радиана в секунду
+    float rotationAngle = input.instanceRot + time * 0.5f; 
     
-    // Создаем матрицы вращения
     float4x4 rotY = rotationY(rotationAngle);
-    float4x4 rotX = rotationX(rotationAngle * 0.7f); // Немного другая скорость
+    float4x4 rotX = rotationX(rotationAngle * 0.7f); 
     float4x4 rotationMatrix = mul(rotX, rotY);
     
-    // Матрица масштаба (уменьшаем кубы)
     float4x4 scaleMatrix = float4x4(
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -80,7 +77,6 @@ VS_OUT main(VS_IN input)
         0, 0, 0, 1
     );
     
-    // Матрица переноса (позиция инстанса)
     float4x4 translationMatrix = float4x4(
         1, 0, 0, 0,
         0, 1, 0, 0,
@@ -88,10 +84,8 @@ VS_OUT main(VS_IN input)
         input.instancePos.x, input.instancePos.y, input.instancePos.z, 1
     );
     
-    // Комбинируем: масштаб -> вращение -> перенос
     float4x4 modelMatrix = mul(mul(scaleMatrix, rotationMatrix), translationMatrix);
     
-    // Трансформация вершин
     float4 worldPos = mul(float4(input.pos, 1.0), modelMatrix);
     float4 viewPos = mul(worldPos, viewProj);
     

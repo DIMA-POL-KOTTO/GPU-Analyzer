@@ -54,7 +54,6 @@ namespace GPU_Analyzer.ViewModels
                 e.PropertyName == nameof(Monitoring.CoreClock) ||
                 e.PropertyName == nameof(Monitoring.MemoryClock))
             {
-                // если хочешь автообновление — здесь можно вызвать RunCompare()
                 // RunCompare();
             }
         }

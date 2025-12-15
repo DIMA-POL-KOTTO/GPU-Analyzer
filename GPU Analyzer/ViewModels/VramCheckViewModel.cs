@@ -50,7 +50,7 @@ namespace GPU_Analyzer.ViewModels
 
             ID3D11Device device;
             ID3D11DeviceContext context;
-            // === 1. Создаём временное устройство DirectX ===
+            //временное устройство DirectX
             if (D3D11CreateDevice(
                     null,
                     DriverType.Hardware,
@@ -70,7 +70,7 @@ namespace GPU_Analyzer.ViewModels
             }
             finally
             {
-                // === 5. Освобождаем ресурсы ===
+                
                 context?.Dispose();
                 device?.Dispose();
             }
@@ -81,7 +81,7 @@ namespace GPU_Analyzer.ViewModels
             int totalBytes = testSizeMB * 1024 * 1024;
             if (totalBytes % 4 != 0) totalBytes = (totalBytes / 4) * 4;
 
-            // === 2. Буфер в VRAM ===
+            // буфер в VRAM
             var gpuBufferDesc = new BufferDescription(
                 (uint)totalBytes,
                 BindFlags.None,
@@ -90,8 +90,6 @@ namespace GPU_Analyzer.ViewModels
             );
 
             using var gpuBuffer = device.CreateBuffer(gpuBufferDesc);
-
-            // === 3. Staging-буфер (для чтения CPU) ===
             var stagingDesc = new BufferDescription(
                 (uint)totalBytes,
                 BindFlags.None,
@@ -106,12 +104,13 @@ namespace GPU_Analyzer.ViewModels
 
             foreach (uint pattern in patterns)
             {
-                // === 4. Заполняем CPU-массив ===
                 var cpuData = new uint[totalBytes / 4];
                 for (int i = 0; i < cpuData.Length; i++)
+                {
                     cpuData[i] = pattern;
-
-                // === 5. Загружаем в GPU ===
+                }
+                    
+                // загрузка в GPU
                 var handle = GCHandle.Alloc(cpuData, GCHandleType.Pinned);
                 try
                 {
@@ -121,11 +120,9 @@ namespace GPU_Analyzer.ViewModels
                 {
                     handle.Free();
                 }
-
-                // === 6. Копируем GPU → Staging ===
                 context.CopyResource(stagingBuffer, gpuBuffer);
 
-                // === 7. Читаем и проверяем ===
+                // проверка
                 if (context.Map(stagingBuffer, 0, MapMode.Read, MapFlags.None, out var mapped).Success)
                 {
                     unsafe
@@ -136,7 +133,6 @@ namespace GPU_Analyzer.ViewModels
                             if (ptr[i] != pattern)
                             {
                                 errors.AppendLine($"Ошибка @ {i * 4} байт: ожидалось {pattern:X8}, получено {ptr[i]:X8}");
-                                // Ограничиваем вывод, чтобы не упасть
                                 if (errors.Length > 1000) break;
                             }
                         }

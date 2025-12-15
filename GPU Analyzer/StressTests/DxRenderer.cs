@@ -24,23 +24,23 @@ namespace GPU_Analyzer.StressTests
         private readonly uint _height;
         private readonly int _cubeCount = 300000;
 
-        private ID3D11Device? _device;
-        private ID3D11DeviceContext? _context;
-        private IDXGISwapChain? _swapChain;
+        private ID3D11Device? _device; //доступ к GPU
+        private ID3D11DeviceContext? _context; //отправка команд
+        private IDXGISwapChain? _swapChain; //буфер обмена
         private ID3D11RenderTargetView? _rtv;
         private ID3D11DepthStencilView? _depthView;
 
-        private Thread? _renderThread;
+        private Thread? _renderThread; //отдельный поток для рендеринга
         private volatile bool _running;
 
         // кубы
-        private ID3D11Buffer? _vb;
-        private ID3D11Buffer? _ib;
-        private ID3D11Buffer? _instanceBuffer;
+        private ID3D11Buffer? _vb; //буфер вершин
+        private ID3D11Buffer? _ib; //буфер индексов
+        private ID3D11Buffer? _instanceBuffer; //буфер на (кол-во) экземпляров куба
         private ID3D11Buffer? _constantBuffer;
 
-        private ID3D11VertexShader? _vs;
-        private ID3D11PixelShader? _ps;
+        private ID3D11VertexShader? _vs; //вершинный шейдер
+        private ID3D11PixelShader? _ps; //пиксельный
         private ID3D11InputLayout? _layout;
 
         private Matrix4x4 _proj, _view;
@@ -52,7 +52,7 @@ namespace GPU_Analyzer.StressTests
 
         public DxSimpleRenderer(IntPtr hwnd, uint width = 1920, uint height = 1080)
         {
-            _hwnd = hwnd;
+            _hwnd = hwnd; //куда рисовать
             _width = width;
             _height = height;
             _random = new Random();
@@ -82,7 +82,7 @@ namespace GPU_Analyzer.StressTests
 
         private void InitializeDirectX()
         {
-            // Полное описание BufferDescription
+            //полное описание BufferDescription
             var modeDesc = new ModeDescription(
                 _width,
                 _height,
@@ -133,7 +133,7 @@ namespace GPU_Analyzer.StressTests
                 CullMode = CullMode.None,  // отключаем отсечение
                 FillMode = FillMode.Solid,
                 FrontCounterClockwise = false,
-                DepthClipEnable = true //???
+                DepthClipEnable = true 
             };
 
             var rasterState = _device.CreateRasterizerState(rasterDesc);
@@ -165,12 +165,8 @@ namespace GPU_Analyzer.StressTests
 
         private void CreateShaders()
         {
-            System.Diagnostics.Debug.WriteLine(Path.GetFullPath("StressTests/Shaders/CubeVS.hlsl"));
-            System.Diagnostics.Debug.WriteLine(File.Exists("StressTests/Shaders/CubeVS.hlsl"));
 
-
-
-            // Компиляция .hlsl в рантайме через Vortice
+            // компиляция .hlsl в рантайме через Vortice
             var vsBytecode = Compiler.CompileFromFile("StressTests/Shaders/CubeVS.hlsl", "main", "vs_5_0");
             var psBytecode = Compiler.CompileFromFile("StressTests/Shaders/CubePS.hlsl", "main", "ps_5_0");
 
@@ -179,9 +175,7 @@ namespace GPU_Analyzer.StressTests
 
             var elements = new[]
             {
-                // Вершинный поток
                 new InputElementDescription("POSITION", 0, Format.R32G32B32_Float, 0,0, InputClassification.PerVertexData, 0),
-                // Поток инстансов (1-й инстанс-буфер)
                 new InputElementDescription("INSTANCE_POS", 0, Format.R32G32B32A32_Float, 0, 1, InputClassification.PerInstanceData, 1),
                 new InputElementDescription("INSTANCE_COLOR", 0, Format.R32G32B32A32_Float, 16, 1, InputClassification.PerInstanceData, 1),
                 new InputElementDescription("INSTANCE_ROT", 0, Format.R32_Float, 32, 1, InputClassification.PerInstanceData, 1)
@@ -237,9 +231,9 @@ namespace GPU_Analyzer.StressTests
                 {
 
                     Position = new Vector4(
-                        (float)(_random.NextDouble() * 60 - 30),  // X: -20..20
-                        (float)(_random.NextDouble() * 60 - 30),  // Y: -20..20  
-                        (float)(_random.NextDouble() * 60 - 30),  // Z: -20..20
+                        (float)(_random.NextDouble() * 60 - 30), 
+                        (float)(_random.NextDouble() * 60 - 30),   
+                        (float)(_random.NextDouble() * 60 - 30),  
                         1.0f
                     ),
                     Color = new Color4(
@@ -297,9 +291,9 @@ namespace GPU_Analyzer.StressTests
                 while (_running)
                 {
                     float t = (float)sw.Elapsed.TotalSeconds;
-                    // Обновляем вращение инстансов
+                    // обновление вращение инстансов
                     UpdateInstances(t);
-                    // Очистка
+                    // очистка
                     var bgColor = new Color4(0.1f, 0.1f, 0.1f, 1.0f);
                     _context.ClearDepthStencilView(_depthView!, DepthStencilClearFlags.Depth, 1.0f, 0);
                     _context!.ClearRenderTargetView(_rtv!, bgColor);
@@ -320,10 +314,9 @@ namespace GPU_Analyzer.StressTests
         }
         private void UpdateInstances(float time)
         {
-            // Можно добавить анимацию позиций/цветов если нужно
             for (int i = 0; i < _cubeCount; i++)
             {
-                // Пример: плавное изменение цвета
+                // плавное изменение цвета
                 _instanceData[i].Color = new Color4(
                     (float)(0.5 + 0.5 * Math.Sin(time + i * 0.01)),
                     (float)(0.5 + 0.5 * Math.Sin(time * 1.3 + i * 0.01)),
@@ -339,30 +332,25 @@ namespace GPU_Analyzer.StressTests
         private void RenderCubes(double t)
         {
 
-            // Проверяем буферы
             if (_vb == null || _ib == null || _instanceBuffer == null || _constantBuffer == null)
                 return;
-            // Матрица вида-проекции
+
             var viewProj = Matrix4x4.Transpose(_view * _proj);
             float time = (float)t;
-            // Обновляем константный буфер
             MappedSubresource mapped;
             _context!.Map(_constantBuffer!, 0, MapMode.WriteDiscard, Vortice.Direct3D11.MapFlags.None, out mapped);
 
             unsafe
             {
                 byte* dataPtr = (byte*)mapped.DataPointer.ToPointer();
-                // Копируем матрицу
                 Unsafe.Copy(dataPtr, ref viewProj);
-                // Копируем время (после матрицы)
                 float* timePtr = (float*)(dataPtr + Unsafe.SizeOf<Matrix4x4>());
                 *timePtr = time;
             }
 
             _context.Unmap(_constantBuffer!, 0);
 
-            // Настраиваем пайплайн
-            var vertexStride = (uint)(sizeof(float) * 3); // Vector3
+            var vertexStride = (uint)(sizeof(float) * 3); 
             var instanceStride = (uint)Unsafe.SizeOf<InstanceData>();
 
             var vertexBuffers = new[] { _vb!, _instanceBuffer! };
@@ -374,12 +362,12 @@ namespace GPU_Analyzer.StressTests
             _context.IASetInputLayout(_layout!);
             _context.IASetPrimitiveTopology(PrimitiveTopology.TriangleList);
 
-            // Шейдеры
+            // шейдеры
             _context.VSSetShader(_vs);
             _context.PSSetShader(_ps);
             _context.VSSetConstantBuffer(0, _constantBuffer);
 
-            // Рисуем с инстансингом
+            // рисование с инстансингом
             _context.DrawIndexedInstanced(36, (uint)_cubeCount, 0, 0, 0);
         }
 
@@ -391,13 +379,11 @@ namespace GPU_Analyzer.StressTests
             _context?.Dispose();
             _device?.Dispose();
 
-            // Буферы
             _vb?.Dispose();
             _ib?.Dispose();
             _instanceBuffer?.Dispose();
             _constantBuffer?.Dispose();
 
-            // Шейдеры
             _vs?.Dispose();
             _ps?.Dispose();
             _layout?.Dispose();
@@ -413,7 +399,7 @@ namespace GPU_Analyzer.StressTests
             Stop();
         }
 
-        // Структура данных для инстансов
+        // структура данных для инстансов
         private struct InstanceData
         {
             public Vector4 Position;

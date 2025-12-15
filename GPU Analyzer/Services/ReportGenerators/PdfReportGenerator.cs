@@ -25,11 +25,9 @@ namespace GPU_Analyzer.Services.ReportGenerators
             Font sectionFont = new Font(bf, 14, Font.BOLD);
             Font textFont = new Font(bf, 12);
 
-            // Заголовок
             doc.Add(new Paragraph("ОТЧЁТ", titleFont));
             doc.Add(new Paragraph("\n"));
 
-            // Функция удобного добавления
             void AddLine(string label, string value)
             {
                 doc.Add(new Paragraph($"{label}: {value}", textFont));

@@ -15,14 +15,14 @@ namespace GPU_Analyzer.Models
         private string dedicatedMemory = "";
         private string driverVersion = "";
         private string videoProcessor = "";
-        private string adapterCompatibility = "";
-        private string pnpDeviceId = "";
-        private string deviceId = "";
+        private string adapterCompatibility = ""; //название производителя
+        private string pnpDeviceId = ""; //уникальный id устройсва в системе
+        private string deviceId = ""; //системный id (VideoController1)
         private string videoModeDescription = "";
         private string currentResolution = "";
         private string refreshRate = "";
         private string videoMemoryType = "";
-        private string vendor = "";
+        private string vendor = ""; //производитель
 
         public string Name
         {
